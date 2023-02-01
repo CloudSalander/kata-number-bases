@@ -1,9 +1,25 @@
 <?php
+#complete program
+
 define('BINARY_BASE',2);
 define('OCTAL_BASE',8);
+define('DECIMAL_BASE',10);
 define('HEXADECIMAL_BASE',16);
+define('ACCEPTED_NUMERIC_BASES',[BINARY_BASE,OCTAL_BASE,DECIMAL_BASE,HEXADECIMAL_BASE]);
 
-function transformDecimalToHexadecimal($number) {
+function checkNumber($number): bool {
+	if(is_numeric($number)) return intval($number);
+	else return false;
+}
+
+function checkNumericBase($number): bool {
+	if(is_numeric($number) && in_array(intval($number), ACCEPTED_NUMERIC_BASES)) {
+		return intval($number);
+	}
+	else return false;
+}
+
+function transformDecimalToHexadecimal(int $number):bool {
 	switch($number) {
 		case 10:
 			return 'A';
@@ -19,6 +35,7 @@ function transformDecimalToHexadecimal($number) {
 			return 'F';
 	}
 }
+
 
 function isHexadecimalChar($base,$number) {
 	return $base == HEXADECIMAL_BASE && $number > 9; 	
@@ -37,16 +54,28 @@ function transformToBase($number,$base) {
 	return strrev($string_number);
 }
 
+function transformToDecimal($number,$base) {
+	
+}
+
 function printToOtherNumericBases($number) {
-	$numeric_bases = [BINARY_BASE,OCTAL_BASE,HEXADECIMAL_BASE];
+	$numeric_bases = [BINARY_BASE,OCTAL_BASE,DECIMAL_BASE,HEXADECIMAL_BASE];
 	$string_number = "";
 	foreach ($numeric_bases as $base) {
 		echo $number." into base ".$base." is: ".strval(transformToBase($number,$base)).".\n";		
 	}
 }
 
-#intval() y readline() son funciones 
-$number =  intval(readline("Please,enter base 10 number:"));
+#intval() y readline() son funciones de PHP
+do {
+	$number =  readline("Please,enter number:");
+}while(!checkNumber($number));
+
+do {
+	$base = readline("Please, enter base(2,8,10 or 16)");
+}while(!checkNumericBase($base));
+
+
 #todo: base number selector and input checker
-printToOtherNumericBases($number);
+printToOtherNumericBases($number,$base);
 
