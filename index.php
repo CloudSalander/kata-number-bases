@@ -6,20 +6,30 @@ define('OCTAL_BASE',8);
 define('DECIMAL_BASE',10);
 define('HEXADECIMAL_BASE',16);
 define('ACCEPTED_NUMERIC_BASES',[BINARY_BASE,OCTAL_BASE,DECIMAL_BASE,HEXADECIMAL_BASE]);
+define("HEXADECIMAL_CHARS",["0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F"]);
+
+
+function isHexadecimalNumber(string $number): bool {
+	$number_chars = str_split($number);
+	foreach($number_chars as $char) {
+		if(!in_array($char,HEXADECIMAL_CHARS)) return false;
+	}
+	return true;
+} 
 
 function checkNumber($number): bool {
-	if(is_numeric($number)) return intval($number);
+	if(is_numeric($number) || isHexadecimalNumber($number)) return $number;
 	else return false;
 }
 
-function checkNumericBase($number): bool {
+function checkNumericBase(string $number): bool {
 	if(is_numeric($number) && in_array(intval($number), ACCEPTED_NUMERIC_BASES)) {
 		return intval($number);
 	}
 	else return false;
 }
 
-function transformDecimalToHexadecimal($number):string {
+function transformDecimalToHexadecimal(int $number):string {
 	switch($number) {
 		case 10:
 			return 'A';
@@ -54,14 +64,19 @@ function transformToBase(int $number,int $base): string {
 	return strrev($string_number);
 }
 
-function transformToDecimal($number,$base) {
-	
+function transformToDecimal(int $number,int $base): int {
+	$con = 0;
+	$decimal_number = 0;
+	do {
+		$current_number = $number%$base;
+		$decimal_number += $current_number * ($base ** $con);
+		$number = intdiv($number,10); 
+	}while($number/10 > 0);
 }
 
 function printToOtherNumericBases(int $number): void {
-	$numeric_bases = [BINARY_BASE,OCTAL_BASE,DECIMAL_BASE,HEXADECIMAL_BASE];
 	$string_number = "";
-	foreach ($numeric_bases as $base) {
+	foreach (ACCEPTED_NUMERIC_BASES as $base) {
 		echo $number." into base ".$base." is: ".strval(transformToBase($number,$base)).".\n";		
 	}
 }
@@ -76,6 +91,5 @@ do {
 }while(!checkNumericBase($base));
 
 
-#todo: base number selector and input checker
 printToOtherNumericBases($number,$base);
 
