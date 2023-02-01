@@ -3,7 +3,7 @@ define('BINARY_BASE',2);
 define('OCTAL_BASE',8);
 define('HEXADECIMAL_BASE',16);
 
-function decimalNumberToHexadecimalNumber($number) {
+function transformDecimalToHexadecimal($number) {
 	switch($number) {
 		case 10:
 			return 'A';
@@ -20,58 +20,33 @@ function decimalNumberToHexadecimalNumber($number) {
 	}
 }
 
-function decimalToBinary($number) {
-	$binary_string_number = "";
-	while($number > BINARY_BASE-1) {
-		$binary_string_number .= strval($number%BINARY_BASE);
-		$number = intdiv($number,BINARY_BASE);
-		
+function isHexadecimalChar($base,$number) {
+	return $base == HEXADECIMAL_BASE && $number > 9; 	
+}
+function transformToBase($number,$base) {
+	$string_number = "";
+	do {
+		$number_to_add = $number%$base;
+		if(isHexadecimalChar($base,$number_to_add)) {
+			$number_to_add = transformDecimalToHexadecimal($number_to_add);
+		} 
+		else strval($number_to_add);
+		$string_number .= $number_to_add;
+		$number = intdiv($number,$base);
+	}while($number > 0);
+	return strrev($string_number);
+}
+
+function printToOtherNumericBases($number) {
+	$numeric_bases = [BINARY_BASE,OCTAL_BASE,HEXADECIMAL_BASE];
+	$string_number = "";
+	foreach ($numeric_bases as $base) {
+		echo $number." into base ".$base." is: ".strval(transformToBase($number,$base)).".\n";		
 	}
-	if($number > 0) $binary_string_number.= $number;
-	return strrev($binary_string_number);
 }
 
-function decimalToOctal($number) {
-	$octal_string_number = "";
-	while($number > OCTAL_BASE-1) {
-		$octal_string_number .= strval($number%OCTAL_BASE);
-		$number = intdiv($number,OCTAL_BASE);		
-	}
-	if($number > 0) $octal_string_number.= $number;
-	return strrev($octal_string_number);
-}
-
-function decimalToHexadecimal($number) {
-	$hexadecimal_string_number = "";
-	$hexadecimal_number = "";
-	while($number > HEXADECIMAL_BASE-1) {
-		$hexadecimal_number =  $number%HEXADECIMAL_BASE;
-		if($hexadecimal_number > 9) {
-			$hexadecimal_string_number .= decimalNumberToHexadecimalNumber($hexadecimal_number); 
-		}
-		else {
-			$hexadecimal_string_number .= strval($number%HEXADECIMAL_BASE);	
-		}
-		$number = intdiv($number,HEXADECIMAL_BASE);	
-	}
-	if($number > 0 && $number > 9) $hexadecimal_string_number .= decimalNumberToHexadecimalNumber($number); 
-	else if($number > 0 && $number <= 9) {
-		$hexadecimal_string_number .= strval($number%HEXADECIMAL_BASE);	
-	}
-	return strrev($hexadecimal_string_number);
-}
-
-
-function binaryToDecimal($number) {
-
-}
-
-function octalToDecimal($number) {
-
-}
-
-function hexadecimalToDecimal($number) {
-
-}
-
+#intval() y readline() son funciones 
+$number =  intval(readline("Please,enter base 10 number:"));
+#todo: base number selector and input checker
+printToOtherNumericBases($number);
 
