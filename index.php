@@ -19,7 +19,7 @@ function checkNumericBase($number): bool {
 	else return false;
 }
 
-function transformDecimalToHexadecimal(int $number):bool {
+function transformDecimalToHexadecimal($number):string {
 	switch($number) {
 		case 10:
 			return 'A';
@@ -37,10 +37,10 @@ function transformDecimalToHexadecimal(int $number):bool {
 }
 
 
-function isHexadecimalChar($base,$number) {
+function isHexadecimalChar(int $base,int $number): string {
 	return $base == HEXADECIMAL_BASE && $number > 9; 	
 }
-function transformToBase($number,$base) {
+function transformToBase(int $number,int $base): string {
 	$string_number = "";
 	do {
 		$number_to_add = $number%$base;
@@ -58,7 +58,7 @@ function transformToDecimal($number,$base) {
 	
 }
 
-function printToOtherNumericBases($number) {
+function printToOtherNumericBases(int $number): void {
 	$numeric_bases = [BINARY_BASE,OCTAL_BASE,DECIMAL_BASE,HEXADECIMAL_BASE];
 	$string_number = "";
 	foreach ($numeric_bases as $base) {
